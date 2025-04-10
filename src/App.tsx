@@ -14,6 +14,11 @@ interface Flower {
 
 function App() {
   const [flowers, setFlowers] = useState<Flower[]>([]);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(true);
+
+  const handleMusicToggle = () => {
+    setIsMusicPlaying(!isMusicPlaying);
+  };
 
   useEffect(() => {
     // Create initial flowers
@@ -28,6 +33,7 @@ function App() {
     setFlowers(initialFlowers);
 
     // Animation loop
+    let animationFrameId: number;
     const animateFlowers = () => {
       setFlowers(prevFlowers =>
         prevFlowers.map(flower => ({
@@ -44,16 +50,18 @@ function App() {
             : {})
         }))
       );
+      animationFrameId = requestAnimationFrame(animateFlowers);
     };
 
-    const interval = setInterval(animateFlowers, 16);
-    return () => clearInterval(interval);
+    animationFrameId = requestAnimationFrame(animateFlowers);
+
+    return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-sky-200 to-sky-400">
-      {/* Falling flowers */}
-      {flowers.map(flower => (
+      {/* Falling flowers and sorry text */}
+      {flowers.map((flower, index) => (
         <div
           key={flower.id}
           className="absolute transition-transform"
@@ -63,11 +71,20 @@ function App() {
             transform: `rotate(${flower.rotation}deg)`,
           }}
         >
-          <Flower2
-            className="text-pink-300"
-            size={flower.size}
-            style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
-          />
+          {index % 2 === 0 ? (
+            <span
+              className="text-pink-500 text-sm font-bold"
+              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+            >
+              Sorry
+            </span>
+          ) : (
+            <Flower2
+              className="text-pink-300"
+              size={flower.size}
+              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+            />
+          )}
         </div>
       ))}
 
@@ -79,10 +96,20 @@ function App() {
         <img src={girlImage} alt="" />
       </div>
 
+      {/* Button to start music if autoplay is blocked */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        <button
+          onClick={handleMusicToggle}
+          className="px-4 py-2 bg-gradient-to-t from-green-600 to-green-500 text-white rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-transform border border-green-700"
+        >
+          Play Music
+        </button>
+      </div>
+
       {/* Background music */}
       <ReactPlayer
         url="https://www.youtube.com/watch?v=OyA3QmUL_x4" // Replace with your desired YouTube URL
-        playing
+        playing={isMusicPlaying}
         loop
         volume={0.5}
         width="0"
