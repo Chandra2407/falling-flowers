@@ -97,12 +97,25 @@ function App() {
       </div>
 
       {/* Button to start music if autoplay is blocked */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+      <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2">
         <button
           onClick={handleMusicToggle}
           className="px-4 py-2 bg-gradient-to-t from-green-600 to-green-500 text-white rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-transform border border-green-700"
         >
-          Play Music
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5.25 5.25l13.5 6.75-13.5 6.75V5.25z"
+            />
+          </svg>
         </button>
       </div>
 
